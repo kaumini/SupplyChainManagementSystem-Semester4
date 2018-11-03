@@ -1,15 +1,21 @@
 const express =  require('express');
 const morgan = require('morgan');
-const mysql = require('mysql');
+
+
+
+//routes
+const users = require('./routes/users')
 
 const app =  express();
 
+//middlewear
 app.use(morgan('tiny'));
 
-app.get('/',(req,res)=>{
-    res.send('done');
-});
 
+
+
+
+app.use('/api/user',users);
 
 
 app.listen(3000,()=>{
