@@ -5,14 +5,27 @@ const router = express.Router();
 
 
 
-router.get('/',(req,res)=>{
-    let sql = 'INSERT INTO users VALUES("1","customer","123",NULL)';
-    db.query(sql,(err,result,fields)=>{
+router.post('/',(req,res)=>{
+    db.getConnection((err,con)=>{
         if(err){
-            console.log(err);
+            res.send('Database connection error');
+            return;
         }
-        res.send(result);
+        else{
+            let data = req.body;
+            let sql = `INSERT INTO users(userType,hash_) VALUES("${data.userType}","${data.hash}")`;
+            con.query(sql,(err,result,fields)=>{
+                if(err){
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                res.send(result);
+            });
+            con.release();
+
+        }
     });
+    
 });
 
 

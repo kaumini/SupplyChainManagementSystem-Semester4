@@ -1,5 +1,5 @@
 CREATE TABLE users(
-  userId char(10),
+  userId int AUTO_INCREMENT,
   userType enum('customer', 'admin' ) NOT NULL,
   hash_ varchar(255) NOT NULL,
   salt varchar(255),
@@ -7,7 +7,7 @@ CREATE TABLE users(
 ); 
 
 CREATE TABLE customers (
-  customerId char(10),
+  customerId int(10),
   customerType enum('wholesaler', 'retailer' , 'endcustomer') NOT NULL,
   firstName varchar(255) NOT NULL,
   lastName varchar(255) NOT NULL,

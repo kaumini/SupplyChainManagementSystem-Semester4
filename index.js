@@ -10,12 +10,13 @@ const app =  express();
 
 //middlewear
 app.use(morgan('tiny'));
+app.use(express.json());
 
 
 
 
 
-app.use('/api/user',users);
+app.use('/api/users',users);
 
 
 app.listen(3000,()=>{
