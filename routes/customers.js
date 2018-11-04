@@ -5,16 +5,18 @@ const router = express.Router();
 
 
 
-router.post('/',(req,res)=>{
+router.post('/',async (req,res)=>{
+    let data = req.body;
+    
     db.getConnection((err,con)=>{
         if(err){
             res.send('Database connection error');
             return;
         }
         else{
-            let data = req.body;
-            let sql = `INSERT INTO customers VALUES("${data.customerId}","${data.customerType}","${data.firstName}","${data.lastName}","${data.city}","${data.street}","${data.num}","${data.phone}")`;
-            con.query(sql,(err,result,fields)=>{
+
+            let sql = 'INSERT INTO customers SET ?';
+            con.query(sql,data,(err,result,fields)=>{
                 if(err){
                     console.log(err);
                     res.status(400).send(err);
@@ -25,6 +27,26 @@ router.post('/',(req,res)=>{
         }
     });
     
+});
+
+router.get('/',async (req,res)=>{
+    db.getConnection((err,con)=>{
+        if(err){
+            res.send('Database connection error');
+            return;
+        }
+        else{
+            let sql = 'SELECT * FROM customers';
+            con.query(sql,(err,result,fields)=>{
+                if(err){
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                res.send(result);
+            });
+            con.release();
+        }
+    }); 
 });
 
 
