@@ -13,7 +13,7 @@ router.post('/',(req,res)=>{
         }
         else{
             let data = req.body;
-            let sql = `INSERT INTO users(userType,email,hash_) VALUES("${data.userType}","${data.email}","${data.hash}")`;
+            let sql = `INSERT INTO customers VALUES("${data.customerId}","${data.customerType}","${data.firstName}","${data.lastName}","${data.city}","${data.street}","${data.num}","${data.phone}")`;
             con.query(sql,(err,result,fields)=>{
                 if(err){
                     console.log(err);
@@ -22,7 +22,6 @@ router.post('/',(req,res)=>{
                 res.send(result);
             });
             con.release();
-
         }
     });
     
