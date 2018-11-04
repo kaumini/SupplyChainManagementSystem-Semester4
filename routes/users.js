@@ -22,44 +22,36 @@ router.post('/',async (req,res)=>{
     data.hash_ = hash;
 
     db.getConnection((err,con)=>{
-        if(err){
-            res.status(500).send('Database connection error');
-            return;
-        }
-        else{
-            let sql = 'INSERT INTO users SET ?';
-            con.query(sql,data,(err,result,fields)=>{
-                if(err){
-                    console.log(err);
-                    res.status(400).send(err);
-                    return;
-                }
-                res.send(result);
-            });
-            
-        }
+        if(err) return res.status(500).send('Database connection error');
 
+        let sql = 'INSERT INTO users SET ?';
+        con.query(sql,data,(err,result,fields)=>{
+            if(err){
+                console.log(err);
+                res.status(400).send(err);
+                return;
+            }
+            res.send(result);
+        });
+        
         con.release();
     });  
 });
 
 router.get('/',async (req,res)=>{
     db.getConnection((err,con)=>{
-        if(err){
-            res.status(500).send('Database connection error');
-            return;
-        }
-        else{
-            let sql = 'SELECT userId,email,userType FROM users';
-            con.query(sql,(err,result,fields)=>{
-                if(err){
-                    console.log(err);
-                    res.status(400).send(err);
-                    return;
-                }
-                res.send(result);
-            });   
-        }
+        if(err) return res.status(500).send('Database connection error');
+
+        let sql = 'SELECT userId,email,userType FROM users';
+        con.query(sql,(err,result,fields)=>{
+            if(err){
+                console.log(err);
+                res.status(400).send(err);
+                return;
+            }
+            res.send(result);
+        });   
+        
         con.release();
     });  
 });

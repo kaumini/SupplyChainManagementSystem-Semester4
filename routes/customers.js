@@ -21,22 +21,18 @@ router.post('/',async (req,res)=>{
     let data = req.body;
 
     db.getConnection((err,con)=>{
-        if(err){
-            res.status(500).send('Database connection error');
-            return;
-        }
-        else{
-
-            let sql = 'INSERT INTO customers SET ?';
-            con.query(sql,data,(err,result,fields)=>{
-                if(err){
-                    console.log(err);
-                    res.status(400).send(err);
-                    return;
-                }
-                res.send(result);
-            });
-        }
+        if(err) return res.status(500).send('Database connection error');
+         
+        let sql = 'INSERT INTO customers SET ?';
+        con.query(sql,data,(err,result,fields)=>{
+            if(err){
+                console.log(err);
+                res.status(400).send(err);
+                return;
+            }
+            res.send(result);
+        });
+        
         con.release();
     });
     
@@ -44,21 +40,19 @@ router.post('/',async (req,res)=>{
 
 router.get('/',async (req,res)=>{
     db.getConnection((err,con)=>{
-        if(err){
-            res.status(500).send('Database connection error');
-            return;
-        }
-        else{
-            let sql = 'SELECT * FROM customers';
-            con.query(sql,(err,result,fields)=>{
-                if(err){
-                    console.log(err);
-                    res.status(400).send(err);
-                    return;
-                }
-                res.send(result);
-            });
-        }
+        if(err) return res.status(500).send('Database connection error');
+
+        let sql = 'SELECT * FROM customers';
+
+        con.query(sql,(err,result,fields)=>{
+            if(err){
+                console.log(err);
+                res.status(400).send(err);
+                return;
+            }
+            res.send(result);
+        });
+    
         con.release();
     }); 
 });

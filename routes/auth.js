@@ -1,6 +1,8 @@
 const express =  require('express');
 const {db} = require('../db/database');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
 
 const router = express.Router();
 
@@ -15,27 +17,26 @@ sample valid schema for post ree json
 router.post('/',async (req,res)=>{
 
     db.getConnection((err,con)=>{
-        if(err){
-            res.send('Database connection error');
-            return;
-        }
-        else{
-            let sql = 'SELECT hash_ FROM users WHERE users.email=?';
+        if(err) return res.send('Database connection error');
 
-            return con.query(sql,req.body.email,(err,result,fields)=>{
-                if(err){
-                    console.log(err);
-                    return res.status(400).send(err);
-                }
+        let sql = 'SELECT * FROM users WHERE users.email=?';
+
+        con.query(sql,req.body.email,(err,result,fields)=>{
+            if(err){
+                console.log(err);
+                return res.status(400).send(err);
+            }
+            
+            (async (hash)=>{
+                const isValid = await bcrypt.compare(req.body.hash_,hash);
+                if(!isValid) return res.status(400).send('Invalid email or password!');
+
+                const token = jwt.sign(_.pick(result[0],['userId','email','userType']),'privateKey');
+                res.send(token);
                 
-                (async (hash)=>{
-                    const isValid = await bcrypt.compare(req.body.hash_,hash);
-                    if(!isValid) return res.status(400).send('Invalid email or password!');
-                    res.send(true);  
-                })(result[0].hash_);
-                
-            });  
-        }
+            })(result[0].hash_);
+
+        });
 
         con.release();
     });  
