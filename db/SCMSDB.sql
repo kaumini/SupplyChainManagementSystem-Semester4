@@ -3,7 +3,6 @@ CREATE TABLE users(
   email varchar(255) UNIQUE,
   userType enum('customer', 'admin', 'employee' ) NOT NULL,
   hash_ varchar(255) NOT NULL,
-  salt varchar(255),
   PRIMARY KEY (userId)
 ); 
 

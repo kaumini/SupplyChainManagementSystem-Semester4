@@ -1,19 +1,46 @@
 const express =  require('express');
 const {db} = require('../db/database');
+const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
 
 
-router.post('/',(req,res)=>{
+router.post('/',async (req,res)=>{
+    let data = req.body;
+
+    //hashing password
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(data.hash_,salt);
+    data.hash_ = hash;
+
     db.getConnection((err,con)=>{
         if(err){
             res.send('Database connection error');
             return;
         }
         else{
-            let data = req.body;
-            let sql = `INSERT INTO users(userType,email,hash_) VALUES("${data.userType}","${data.email}","${data.hash}")`;
+            let sql = 'INSERT INTO users SET ?';
+            con.query(sql,data,(err,result,fields)=>{
+                if(err){
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                res.send(result);
+            });
+            con.release();
+        }
+    });  
+});
+
+router.get('/',async (req,res)=>{
+    db.getConnection((err,con)=>{
+        if(err){
+            res.send('Database connection error');
+            return;
+        }
+        else{
+            let sql = 'SELECT userId,email,userType FROM users';
             con.query(sql,(err,result,fields)=>{
                 if(err){
                     console.log(err);
@@ -22,11 +49,8 @@ router.post('/',(req,res)=>{
                 res.send(result);
             });
             con.release();
-
         }
-    });
-    
+    });  
 });
-
 
 module.exports = router;
