@@ -4,7 +4,14 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
-
+/********************************
+sample valid schema for post ree json 
+    {
+        "userType":"admin",
+        "email":"afjkkk@b.com",
+        "hash_":"123546"
+    }
+ ******************************/
 
 router.post('/',async (req,res)=>{
     let data = req.body;
@@ -16,7 +23,7 @@ router.post('/',async (req,res)=>{
 
     db.getConnection((err,con)=>{
         if(err){
-            res.send('Database connection error');
+            res.status(500).send('Database connection error');
             return;
         }
         else{
@@ -25,18 +32,21 @@ router.post('/',async (req,res)=>{
                 if(err){
                     console.log(err);
                     res.status(400).send(err);
+                    return;
                 }
                 res.send(result);
             });
-            con.release();
+            
         }
+
+        con.release();
     });  
 });
 
 router.get('/',async (req,res)=>{
     db.getConnection((err,con)=>{
         if(err){
-            res.send('Database connection error');
+            res.status(500).send('Database connection error');
             return;
         }
         else{
@@ -45,11 +55,12 @@ router.get('/',async (req,res)=>{
                 if(err){
                     console.log(err);
                     res.status(400).send(err);
+                    return;
                 }
                 res.send(result);
-            });
-            con.release();
+            });   
         }
+        con.release();
     });  
 });
 

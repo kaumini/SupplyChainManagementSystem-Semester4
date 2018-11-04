@@ -3,14 +3,26 @@ const {db} = require('../db/database');
 
 const router = express.Router();
 
-
+/************************************* 
+sample valid schema for post req json
+{
+	"customerId":"2",
+	"customerType":"retailer",
+	"firstName":"isuruul",
+	"lastName":"ma",
+	"city":"gampaha",
+	"street":"jsjs",
+	"num":"1",
+	"phone":"0778260669"
+}
+ ***************************************/
 
 router.post('/',async (req,res)=>{
     let data = req.body;
-    
+
     db.getConnection((err,con)=>{
         if(err){
-            res.send('Database connection error');
+            res.status(500).send('Database connection error');
             return;
         }
         else{
@@ -20,11 +32,12 @@ router.post('/',async (req,res)=>{
                 if(err){
                     console.log(err);
                     res.status(400).send(err);
+                    return;
                 }
                 res.send(result);
             });
-            con.release();
         }
+        con.release();
     });
     
 });
@@ -32,7 +45,7 @@ router.post('/',async (req,res)=>{
 router.get('/',async (req,res)=>{
     db.getConnection((err,con)=>{
         if(err){
-            res.send('Database connection error');
+            res.status(500).send('Database connection error');
             return;
         }
         else{
@@ -41,11 +54,12 @@ router.get('/',async (req,res)=>{
                 if(err){
                     console.log(err);
                     res.status(400).send(err);
+                    return;
                 }
                 res.send(result);
             });
-            con.release();
         }
+        con.release();
     }); 
 });
 
