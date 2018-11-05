@@ -6,7 +6,7 @@ CREATE TABLE users(
   PRIMARY KEY (userId)
 ); 
 
-CREATE TABLE customers (
+CREATE TABLE customers(
   customerId int(10),
   customerType enum('wholesaler', 'retailer' , 'endcustomer') NOT NULL,
   firstName varchar(255) NOT NULL,
@@ -19,6 +19,12 @@ CREATE TABLE customers (
   FOREIGN KEY (customerId) REFERENCES users(userId)
 );
 
-
-
+CREATE TABLE TrainSchedule(
+  trainScheduleId int(10),
+  day date NOT NULL,
+  time time NOT NULL,
+  mainCity varchar(225) NOT NULL,
+  capacity int(10) NOT NULL,
+  PRIMARY KEY(trainScheduleId)
+);
 
